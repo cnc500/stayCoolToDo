@@ -31,6 +31,7 @@ app.get('/api/notes/:note_id', (req, res) => {
     if (req.params.note_id) {
       console.info(`${req.method} request received to get a single a review`);
       const noteId = req.params.note_id;
+      console.log(noteId);
       for (let i = 0; i < notes.length; i++) {
         const currentNote = notes[i];
         if (currentNote.note_id === noteId) {
