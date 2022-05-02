@@ -2,28 +2,23 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const data = require('./db/db.json');
-// const { clog } = require('./middleware/clog');
-// const api = require('./public/assets/js/index.js');
-// const notes = require('/db/notes');
+const uuid = require('uuid');
 
 const PORT = 3001;
 
 const app = express();
 
-// Import custom middleware, "cLog"
-
 // Middleware for parsing JSON and urlencoded form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use('/api', api);
 
 app.use(express.static('public'));
 
-
+// See index page at opening page
 app.get("/",(req, res) => {
   res.sendFile(path.join(__dirname,"./public/index.html"))
 })
-
+// Working note taker page
 app.get("/notes",(req, res) => {
   res.sendFile(path.join(__dirname,"./public/notes.html"))
 })
@@ -37,6 +32,8 @@ app.get('/api/notes', (req, res) => {
 
 app.post('/api/notes', (req, res) => {
   const newNote = req.body
+  // Creates unique id forevery single note
+  newNote.id = uuid.v4().toString();
   data.push(newNote);
   fs.writeFileSync('./db/db.json', JSON.stringify(data));
   res.sendFile(path.join(__dirname,"./db/db.json"))
@@ -44,7 +41,7 @@ app.post('/api/notes', (req, res) => {
 }
 )
   
-
+// This listens to the port like a chime for both going in and out, and the connection to the port itself.
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT} 🚀`)
 );
